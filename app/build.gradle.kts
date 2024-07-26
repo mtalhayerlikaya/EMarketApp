@@ -32,6 +32,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 
@@ -46,7 +49,7 @@ dependencies {
     implementation(libs.hilt)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    annotationProcessor(libs.hilt.compiler) //kapt
+    annotationProcessor(libs.hilt.compiler)
     implementation(libs.google.gson)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

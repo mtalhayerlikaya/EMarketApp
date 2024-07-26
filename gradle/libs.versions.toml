@@ -44,16 +44,6 @@ android-material = { group = "com.google.android.material", name = "material", v
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
-
-
-
-
-#// To use Kotlin annotation processing tool (kapt)
-#kapt("androidx.room:room-compiler:$room_version")
-
-
-
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
