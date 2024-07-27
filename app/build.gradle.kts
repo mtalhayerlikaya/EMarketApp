@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.navigation.safeargs)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
@@ -49,7 +50,7 @@ dependencies {
     implementation(libs.hilt)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    annotationProcessor(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.google.gson)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
@@ -59,6 +60,7 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler) // annotationProcessor
     implementation(libs.androidx.room.ktx)
     implementation(libs.android.material)
+    implementation(libs.lottie.anim)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

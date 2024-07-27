@@ -1,12 +1,15 @@
-package com.example.emarketapp
+package com.example.emarketapp.view
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.example.emarketapp.R
 import com.example.emarketapp.base.BaseActivity
 import com.example.emarketapp.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

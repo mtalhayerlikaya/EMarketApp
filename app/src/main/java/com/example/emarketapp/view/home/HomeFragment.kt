@@ -1,26 +1,40 @@
 package com.example.emarketapp.view.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.emarketapp.R
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import com.example.emarketapp.base.BaseFragment
+import com.example.emarketapp.databinding.FragmentHomeBinding
+import com.example.emarketapp.utils.Resource
+import com.example.emarketapp.utils.pksCollectResult
+import com.example.emarketapp.view.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-class HomeFragment : Fragment() {
+    private val homeViewModel: HomeViewModel by viewModels()
+    private lateinit var mActivity: MainActivity
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mActivity = activity as MainActivity
+        homeViewModel.getProductList()
+        getProductList()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    private fun getProductList() {
+        homeViewModel.allProducts.pksCollectResult(
+            lifecycleScope = this,
+            contextForShowSpinner = mActivity,
+            resultError = { message ->
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            val result = it as Resource.Success
+            val productList = result.result
+        }
     }
 
 
