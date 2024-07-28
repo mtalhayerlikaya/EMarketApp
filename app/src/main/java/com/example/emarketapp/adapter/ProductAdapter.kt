@@ -1,5 +1,6 @@
 package com.example.emarketapp.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +10,7 @@ import com.example.emarketapp.model.ProductListUIModel
 
 
 class ProductAdapter(
-    private var items: List<ProductListUIModel>,
+    private var items: MutableList<ProductListUIModel>,
     val removeBlock: (blockedContact: ProductListUIModel) -> Unit,
 ) :
     RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
@@ -29,13 +30,14 @@ class ProductAdapter(
 
     override fun getItemCount() = items.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateProductList(updateList: List<ProductListUIModel>) {
-        items = updateList
+        items.clear()
+        items.addAll(updateList)
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: ItemProductBinding) :
-        RecyclerView.ViewHolder(itemView.root) {
+    inner class ViewHolder(val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ProductListUIModel) {
             binding.apply {
                 txtName.text = item.name

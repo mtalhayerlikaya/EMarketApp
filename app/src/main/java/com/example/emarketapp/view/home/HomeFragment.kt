@@ -34,9 +34,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun queryTextListener() {
         binding.homeSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    homeViewModel.searchProduct(it)
-                }
                 return true
             }
 
@@ -73,11 +70,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         ) {
             val result = it as Resource.Success
             val productList = result.result
-            handleAdapter(productList)
+            handleAdapter(productList.toMutableList())
         }
     }
 
-    private fun handleAdapter(list: List<ProductListUIModel>) {
+    private fun handleAdapter(list: MutableList<ProductListUIModel>) {
         adapter = ProductAdapter(list) { _ -> }
         binding.rv.adapter = adapter
         binding.rv.layoutManager = GridLayoutManager(mActivity, 2, LinearLayoutManager.VERTICAL, false)
