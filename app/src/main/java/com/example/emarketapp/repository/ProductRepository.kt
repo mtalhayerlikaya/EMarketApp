@@ -9,4 +9,5 @@ interface ProductRepository {
     suspend fun getProductList(): Flow<Resource<List<ProductListUIModel>>>
     suspend fun getProduct(id: String): ProductResponse
     suspend fun getSearchedProductFromDB(searchPattern: String): Flow<Resource<List<ProductListUIModel>>>
+    suspend fun getProductsBetweenRange(minPrice: Double, maxPrice: Double): Flow<Resource<List<ProductListUIModel>>>
 }

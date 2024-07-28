@@ -6,4 +6,5 @@ interface LocalDataSource {
     suspend fun insertProductList(productList: List<ProductEntity>)
     suspend fun getSearchedProductFromDB(searchPattern: String): List<ProductEntity>
     suspend fun getProductListFromDB(): List<ProductEntity>
+    suspend fun getProductsBetweenRange(minPrice: Double, maxPrice: Double): List<ProductEntity>
 }

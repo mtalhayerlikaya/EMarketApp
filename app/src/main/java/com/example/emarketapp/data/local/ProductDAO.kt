@@ -16,4 +16,7 @@ interface ProductDAO {
 
     @Query("SELECT * FROM product WHERE name LIKE '%' || :searchPattern || '%' OR name LIKE '%' || :searchPattern || '%'")
     suspend fun findProductByName(searchPattern: String): List<ProductEntity>
+
+    @Query("SELECT * FROM product WHERE price BETWEEN :minPrice AND :maxPrice")
+    suspend fun findProductBetweenRange(minPrice: Double, maxPrice: Double): List<ProductEntity>
 }

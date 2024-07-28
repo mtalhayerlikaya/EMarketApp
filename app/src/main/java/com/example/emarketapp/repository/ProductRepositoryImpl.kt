@@ -55,4 +55,17 @@ constructor(
             }
         }
 
+    override suspend fun getProductsBetweenRange(
+        minPrice: Double,
+        maxPrice: Double,
+    ): Flow<Resource<List<ProductListUIModel>>> = flow {
+        emit(Resource.Loading)
+        try {
+            val result = localDataSource.getProductsBetweenRange(minPrice, maxPrice)
+            emit(Resource.Success(result.toProductUIList()))
+        } catch (throwable: Throwable) {
+            emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
+        }
+    }
+
 }

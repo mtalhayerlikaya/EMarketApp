@@ -36,4 +36,13 @@ class HomeViewModel
         }
     }
 
+    private val _filterPriceRange = MutableStateFlow<Resource<List<ProductListUIModel>>>(Resource.Loading)
+    val filterPriceRange: MutableStateFlow<Resource<List<ProductListUIModel>>> = _filterPriceRange
+
+    fun getProductsBetweenRange(minPrice: Double, maxPrice: Double) = viewModelScope.launch {
+        productRepository.getProductsBetweenRange(minPrice, maxPrice).collect {
+            _filterPriceRange.emit(it)
+        }
+    }
+
 }

@@ -14,4 +14,10 @@ constructor(private val productDAO: ProductDAO) : LocalDataSource {
 
     override suspend fun getProductListFromDB(): List<ProductEntity> =
         productDAO.getProductList()
+
+    override suspend fun getProductsBetweenRange(
+        minPrice: Double,
+        maxPrice: Double,
+    ): List<ProductEntity> =
+        productDAO.findProductBetweenRange(minPrice, maxPrice)
 }

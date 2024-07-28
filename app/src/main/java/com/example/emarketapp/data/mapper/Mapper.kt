@@ -8,7 +8,7 @@ fun List<ProductEntity>.toProductUIList() = map {
     ProductListUIModel(
         name = it.name,
         image = it.image,
-        price = it.price,
+        price = it.price.toString(),
         description = it.description,
         model = it.model,
         brand = it.brand,
@@ -32,7 +32,7 @@ fun List<ProductResponse>.toProductEntityList() = map {
     ProductEntity(
         name = it.name,
         image = it.image,
-        price = it.price,
+        price = it.price.toDouble(),
         description = it.description,
         model = it.model,
         brand = it.brand,
