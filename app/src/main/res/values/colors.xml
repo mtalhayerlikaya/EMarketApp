@@ -5,4 +5,5 @@
     <color name="loading_background">#20FFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="toolbar_color">#2A59FE</color>
+    <color name="select_filter_color">#D9D9D9</color>
 </resources>

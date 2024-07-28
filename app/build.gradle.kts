@@ -57,7 +57,7 @@ dependencies {
     implementation(libs.retrofit.converter.scalars)
     implementation(libs.glide)
     implementation(libs.androidx.room)
-    annotationProcessor(libs.androidx.room.compiler) // annotationProcessor
+    ksp(libs.androidx.room.compiler) // annotationProcessor
     implementation(libs.androidx.room.ktx)
     implementation(libs.android.material)
     implementation(libs.lottie.anim)

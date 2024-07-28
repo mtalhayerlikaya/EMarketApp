@@ -1,7 +1,12 @@
 package com.example.emarketapp.repository
 
+import com.example.emarketapp.data.local.LocalDataSource
+import com.example.emarketapp.data.mapper.toProductEntityList
+import com.example.emarketapp.data.mapper.toProductUIList
+import com.example.emarketapp.data.mapper.toProductUIListFromResponse
 import com.example.emarketapp.data.remote.RemoteDataSource
-import com.example.emarketapp.model.ProductModel
+import com.example.emarketapp.model.ProductListUIModel
+import com.example.emarketapp.model.ProductResponse
 import com.example.emarketapp.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -11,30 +16,43 @@ class ProductRepositoryImpl
 @Inject
 constructor(
     private val remoteDataSource: RemoteDataSource,
-    // private val dispatcher: CoroutineDispatcher
+    private val localDataSource: LocalDataSource,
 ) : ProductRepository {
-    override suspend fun getProductList(): Flow<Resource<List<ProductModel>>> = flow {
+    override suspend fun getProductList(): Flow<Resource<List<ProductListUIModel>>> = flow {
         emit(Resource.Loading)
 
-        val result = try {
+        val productList = localDataSource.getProductListFromDB()
+
+        if (productList.isNotEmpty()) {
+            emit(Resource.Success(productList.toProductUIList()))
+        }
+
+        val response = try {
             remoteDataSource.getProductListFromAPI()
         } catch (throwable: Throwable) {
             emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
             null
         }
-        emit(Resource.Success(result!!))
-        /* if (result.isNullOrEmpty()) {
-             val localResult = localCryptoData.getAllCryptosFromDB()
-             emit(Resource.Success(CryptoDBEntityMapper().toCryptoList(localResult)))
-         } else {
-             localCryptoData.insertCryptoList(CryptoDBEntityMapper().toEntityList(result))
-             emit(Resource.Success(result))
-         }*/
 
+        response?.let {
+            localDataSource.insertProductList(response.toProductEntityList())
+            emit(Resource.Success(response.toProductUIListFromResponse()))
+        }
     }
 
-    override suspend fun getProduct(id: String): ProductModel {
+    override suspend fun getProduct(id: String): ProductResponse {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getSearchedProductFromDB(searchPattern: String): Flow<Resource<List<ProductListUIModel>>> =
+        flow {
+            emit(Resource.Loading)
+            try {
+                val result = localDataSource.getSearchedProductFromDB(searchPattern)
+                emit(Resource.Success(result.toProductUIList()))
+            } catch (throwable: Throwable) {
+                emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
+            }
+        }
 
 }

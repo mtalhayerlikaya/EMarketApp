@@ -23,12 +23,12 @@
         android:id="@+id/searchViewCardView"
         android:layout_width="0dp"
         android:layout_height="45dp"
+
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="28dp"
         android:padding="4dp"
         android:visibility="visible"
         app:cardCornerRadius="10dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -46,12 +46,45 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filters"
+        android:text="@string/filters"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
         android:textSize="18sp"
         android:fontFamily="sans-serif"
         app:layout_constraintTop_toBottomOf="@id/searchViewCardView"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/selectFilter"
+        android:layout_width="158dp"
+        android:layout_height="36dp"
+        app:itemRippleColor="@null"
+        app:layout_constraintTop_toBottomOf="@+id/searchViewCardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        app:cardBackgroundColor="#DEDDDD">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_filter"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            android:textSize="14sp" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/selectFilter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/item_product" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

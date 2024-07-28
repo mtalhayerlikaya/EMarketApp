@@ -1,6 +1,10 @@
 package com.example.emarketapp.utils
 
+import android.app.Activity
 import android.content.Context
+import android.view.Window
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -8,6 +12,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+fun Activity.updateStatusBarColor(color: Int) {
+    val window: Window = window
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    window.statusBarColor = ContextCompat.getColor(this, color)
+}
 
 fun <T> StateFlow<T>.pksCollectResult(
     lifecycleScope: LifecycleOwner,

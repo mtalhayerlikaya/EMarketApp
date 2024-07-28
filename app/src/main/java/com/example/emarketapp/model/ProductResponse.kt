@@ -2,7 +2,7 @@ package com.example.emarketapp.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ProductModel(
+data class ProductResponse(
     @SerializedName("name")
     val name: String,
     @SerializedName("image")
