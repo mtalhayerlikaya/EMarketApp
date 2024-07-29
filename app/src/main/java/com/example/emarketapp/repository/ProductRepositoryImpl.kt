@@ -1,6 +1,7 @@
 package com.example.emarketapp.repository
 
 import com.example.emarketapp.data.local.LocalDataSource
+import com.example.emarketapp.data.mapper.toProductEntity
 import com.example.emarketapp.data.mapper.toProductEntityList
 import com.example.emarketapp.data.mapper.toProductUIList
 import com.example.emarketapp.data.mapper.toProductUIListFromResponse
@@ -69,8 +70,7 @@ constructor(
         }
     }
 
-    override fun setInBasket(productID: String, inBasket: Boolean) =
-        localDataSource.setInBasket(productID, inBasket)
+    override fun updateProduct(product: ProductListUIModel) = localDataSource.updateProduct(product.toProductEntity())
 
 
 }

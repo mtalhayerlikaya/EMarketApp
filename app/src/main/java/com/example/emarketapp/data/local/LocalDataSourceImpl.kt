@@ -21,8 +21,7 @@ constructor(private val productDAO: ProductDAO) : LocalDataSource {
     ): List<ProductEntity> =
         productDAO.findProductBetweenRange(minPrice, maxPrice)
 
-    override fun setInBasket(productID: String, inBasket: Boolean) =
-        productDAO.setInBasket(productID, inBasket)
+    override fun updateProduct(product: ProductEntity) = productDAO.updateProduct(product)
 
     override fun getProduct(id: String): ProductEntity = productDAO.getProduct(id)
 }

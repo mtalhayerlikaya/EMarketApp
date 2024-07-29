@@ -80,6 +80,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.emarketapp.R
 import com.example.emarketapp.databinding.ItemProductBinding
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.view.home.HomeViewModel
@@ -120,18 +121,30 @@ class ProductAdapter(
                     .into(productImageView)
 
                 updateButtonState(item)
-
+                updateFavoriteState(item, binding)
                 btnAddToCard.setOnClickListener {
                     addOrRemoveClick(item)
                     item.isInBasket = !item.isInBasket
                     updateButtonState(item)
-                    viewModel.setInBasket(item.id, item.isInBasket)
+                    viewModel.updateProduct(item)
+                }
+                addFavorite.setOnClickListener {
+                    addOrRemoveClick(item)
+                    item.isFavorite = !item.isFavorite
+                    updateFavoriteState(item, binding)
+                    viewModel.updateProduct(item)
                 }
             }
         }
 
         private fun updateButtonState(item: ProductListUIModel) {
             binding.btnAddToCard.text = if (item.isInBasket) "Remove from Basket" else "Add to Basket"
+        }
+        private fun updateFavoriteState(item: ProductListUIModel, binding: ItemProductBinding) {
+            if (item.isFavorite)
+                binding.addFavorite.setImageDrawable(context.getDrawable(R.drawable.icon_star_liked))
+            else
+                binding.addFavorite.setImageDrawable(context.getDrawable(R.drawable.icon_star_white))
         }
     }
 }

@@ -46,8 +46,8 @@ class HomeViewModel
         }
     }
 
-    fun setInBasket(productID: String, inBasket: Boolean) {
-        productRepository.setInBasket(productID, inBasket)
+    fun updateProduct(product: ProductListUIModel) {
+        productRepository.updateProduct(product)
     }
 
 }

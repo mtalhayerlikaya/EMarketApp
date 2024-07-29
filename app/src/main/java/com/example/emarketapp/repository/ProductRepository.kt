@@ -10,5 +10,5 @@ interface ProductRepository {
     fun getProduct(id: String): ProductEntity
     fun getSearchedProductFromDB(searchPattern: String): Flow<Resource<List<ProductListUIModel>>>
     fun getProductsBetweenRange(minPrice: Double, maxPrice: Double): Flow<Resource<List<ProductListUIModel>>>
-    fun setInBasket(productID: String, inBasket: Boolean)
+    fun updateProduct(product: ProductListUIModel)
 }

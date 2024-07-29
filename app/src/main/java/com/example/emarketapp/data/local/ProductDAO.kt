@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.emarketapp.model.ProductEntity
 
 @Dao
@@ -20,9 +21,12 @@ interface ProductDAO {
     @Query("SELECT * FROM product WHERE price BETWEEN :minPrice AND :maxPrice")
     suspend fun findProductBetweenRange(minPrice: Double, maxPrice: Double): List<ProductEntity>
 
-    @Query("UPDATE product SET isInBasket = :inBasket WHERE id = :productID")
-    fun setInBasket(productID: String, inBasket: Boolean)
+    /*    @Query("UPDATE product SET isInBasket = :inBasket WHERE id = :productID")
+        fun setInBasket(productID: String, inBasket: Boolean)*/
 
     @Query("SELECT * FROM product WHERE id = :productID")
     fun getProduct(productID: String): ProductEntity
+
+    @Update
+    fun updateProduct(product: ProductEntity)
 }
