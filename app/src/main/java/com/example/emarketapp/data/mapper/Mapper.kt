@@ -1,5 +1,6 @@
 package com.example.emarketapp.data.mapper
 
+import androidx.lifecycle.LiveData
 import com.example.emarketapp.model.ProductEntity
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.model.ProductResponse
@@ -12,7 +13,9 @@ fun List<ProductEntity>.toProductUIList() = map {
         description = it.description,
         model = it.model,
         brand = it.brand,
-        id = it.id
+        id = it.id,
+        isFavorite = it.isFavorite,
+        isInBasket = it.isInBasket
     )
 }
 
@@ -24,7 +27,9 @@ fun List<ProductResponse>.toProductUIListFromResponse() = map {
         description = it.description,
         model = it.model,
         brand = it.brand,
-        id = it.id
+        id = it.id,
+        isFavorite = false,
+        isInBasket = false
     )
 }
 
@@ -36,9 +41,25 @@ fun List<ProductResponse>.toProductEntityList() = map {
         description = it.description,
         model = it.model,
         brand = it.brand,
-        id = it.id
+        id = it.id,
+        isFavorite = false,
+        isInBasket = false
     )
 }
 
+fun LiveData<ProductEntity>.toProductUIListModel(): ProductListUIModel? {
+    val productEntity = this.value ?: return null
 
+    return ProductListUIModel(
+        name = productEntity.name,
+        image = productEntity.image,
+        price = productEntity.price.toString(), // Convert Double to String
+        description = productEntity.description,
+        model = productEntity.model,
+        brand = productEntity.brand,
+        id = productEntity.id,
+        isFavorite = productEntity.isFavorite,
+        isInBasket = productEntity.isInBasket
+    )
+}
 

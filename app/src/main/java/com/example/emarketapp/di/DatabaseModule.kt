@@ -23,7 +23,7 @@ object DatabaseModule {
             appContext,
             ProductDatabase::class.java,
             "main.db"
-        ).build()
+        ).allowMainThreadQueries().build()
 
     @Provides
     @Singleton

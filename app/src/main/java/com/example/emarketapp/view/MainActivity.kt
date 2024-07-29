@@ -19,4 +19,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.navController)
     }
+
+    fun setBadge() {
+        val badge = binding.bottomNavigationView.getOrCreateBadge(R.id.basketFragment)
+        badge.isVisible = true
+        badge.number = 15
+    }
 }

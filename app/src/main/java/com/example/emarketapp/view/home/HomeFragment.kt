@@ -1,5 +1,6 @@
 package com.example.emarketapp.view.home
 
+import ProductAdapter
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
@@ -8,15 +9,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emarketapp.R
-import com.example.emarketapp.adapter.ProductAdapter
 import com.example.emarketapp.base.BaseFragment
 import com.example.emarketapp.databinding.FragmentHomeBinding
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.utils.Resource
-import com.example.emarketapp.utils.pksCollectResult
+import com.example.emarketapp.utils.Spinner
 import com.example.emarketapp.view.MainActivity
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,16 +25,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
     private lateinit var mActivity: MainActivity
     private lateinit var adapter: ProductAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mActivity = activity as MainActivity
-        homeViewModel.getProductList()
-        getProductList()
+        //mActivity.setBadge()
+        observeFlow()
         initUI()
+        //  homeViewModel.getProductList()
     }
 
     private fun initUI() {
@@ -51,50 +53,92 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 return true
             }
         })
-        homeViewModel.searchProductFlow.pksCollectResult(
-            lifecycleScope = this,
-            contextForShowSpinner = mActivity,
-            resultError = { message ->
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-        ) {
-            val result = it as Resource.Success
-            val productList = result.result
-            adapter.updateProductList(productList)
-        }
-        homeViewModel.filterPriceRange.pksCollectResult(
-            lifecycleScope = this,
-            contextForShowSpinner = mActivity,
-            resultError = { message ->
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-        ) {
-            val result = it as Resource.Success
-            val productListBetweenRange = result.result
-            adapter.updateProductList(productListBetweenRange)
-        }
+
         binding.selectFilter.setOnClickListener {
             showFilterDialog()
         }
 
     }
 
-    private fun getProductList() {
-        homeViewModel.allProducts.pksCollectResult(
-            lifecycleScope = this,
-            contextForShowSpinner = mActivity,
-            resultError = { message ->
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    private fun observeFlow() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            homeViewModel.allProducts.collect() { result ->
+                when (result) {
+                    is Resource.Failure -> {
+                        Spinner.hide()
+                        Toast.makeText(requireContext(), result.exceptionMessage, Toast.LENGTH_SHORT).show()
+                    }
+
+                    is Resource.Loading -> {
+                        Spinner.show(requireContext())
+                    }
+
+                    is Resource.Success -> {
+                        Spinner.hide()
+                        handleAdapter(result.result.toMutableList())
+                    }
+                }
             }
-        ) {
-            val result = it as Resource.Success
-            val productList = result.result
-            handleAdapter(productList.toMutableList())
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            homeViewModel.searchProductFlow.collect() { result ->
+                when (result) {
+                    is Resource.Failure -> {
+                        Spinner.hide()
+                        Toast.makeText(requireContext(), result.exceptionMessage, Toast.LENGTH_SHORT).show()
+                    }
+
+                    is Resource.Loading -> {
+                        Spinner.show(requireContext())
+                    }
+
+                    is Resource.Success -> {
+                        Spinner.hide()
+                        val productList = result.result
+                        adapter.updateProductList(productList)
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            homeViewModel.filterPriceRange.collect() { result ->
+                when (result) {
+                    is Resource.Failure -> {
+                        Spinner.hide()
+                        Toast.makeText(requireContext(), result.exceptionMessage, Toast.LENGTH_SHORT).show()
+                    }
+
+                    is Resource.Loading -> {
+                        Spinner.show(requireContext())
+                    }
+
+                    is Resource.Success -> {
+                        Spinner.hide()
+                        val productListBetweenRange = result.result
+                        adapter.updateProductList(productListBetweenRange)
+                    }
+                }
+            }
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!binding.homeSearchView.query.isNullOrEmpty()) {
+            homeViewModel.searchProduct(binding.homeSearchView.query.toString())
+        } else {
+            homeViewModel.getProductList()
         }
     }
 
+
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = ProductAdapter(list) { _ -> }
+        adapter = ProductAdapter(mActivity, homeViewModel, list) { product ->
+
+        }
         binding.rv.adapter = adapter
         binding.rv.layoutManager = GridLayoutManager(mActivity, 2, LinearLayoutManager.VERTICAL, false)
     }
@@ -110,11 +154,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         val minPriceTextView = dialogView.findViewById<TextView>(R.id.minPriceTextView)
         val maxPriceTextView = dialogView.findViewById<TextView>(R.id.maxPriceTextView)
 
-        // Initialize sliders with default values
         minPriceSlider.value = 0f
         maxPriceSlider.value = 0f
 
-        // Set up listeners to update TextViews based on slider values
         minPriceSlider.addOnChangeListener { slider, value, _ ->
             minPriceTextView.text = getString(R.string.min_price) + ": $value"
         }
@@ -137,7 +179,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     .show()
                 return@setOnClickListener
             }
-            // Ensure minPrice is not greater than maxPrice
+
             if (minPrice > maxPrice) {
                 Toast.makeText(context, "Minimum price cannot be greater than maximum price.", Toast.LENGTH_SHORT)
                     .show()

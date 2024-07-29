@@ -26,8 +26,9 @@ class HomeViewModel
         }
     }
 
+
     private val _searchProductFlow = MutableStateFlow<Resource<List<ProductListUIModel>>>(Resource.Loading)
-    val searchProductFlow: MutableStateFlow<Resource<List<ProductListUIModel>>> = _searchProductFlow
+    val searchProductFlow: StateFlow<Resource<List<ProductListUIModel>>> = _searchProductFlow
 
 
     fun searchProduct(searchPattern: String) = viewModelScope.launch {
@@ -37,12 +38,16 @@ class HomeViewModel
     }
 
     private val _filterPriceRange = MutableStateFlow<Resource<List<ProductListUIModel>>>(Resource.Loading)
-    val filterPriceRange: MutableStateFlow<Resource<List<ProductListUIModel>>> = _filterPriceRange
+    val filterPriceRange: StateFlow<Resource<List<ProductListUIModel>>> = _filterPriceRange
 
     fun getProductsBetweenRange(minPrice: Double, maxPrice: Double) = viewModelScope.launch {
         productRepository.getProductsBetweenRange(minPrice, maxPrice).collect {
             _filterPriceRange.emit(it)
         }
+    }
+
+    fun setInBasket(productID: String, inBasket: Boolean) {
+        productRepository.setInBasket(productID, inBasket)
     }
 
 }
