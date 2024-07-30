@@ -72,5 +72,24 @@ constructor(
 
     override fun updateProduct(product: ProductListUIModel) = localDataSource.updateProduct(product.toProductEntity())
 
+    override fun getFavProductList(): Flow<Resource<List<ProductListUIModel>>> = flow {
+        emit(Resource.Loading)
+        try {
+            val result = localDataSource.getFavProductList()
+            emit(Resource.Success(result.toProductUIList()))
+        } catch (throwable: Throwable) {
+            emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
+        }
+    }
+
+    override fun getBasketProductList(): Flow<Resource<List<ProductListUIModel>>> = flow {
+        emit(Resource.Loading)
+        try {
+            val result = localDataSource.getBasketProductList()
+            emit(Resource.Success(result.toProductUIList()))
+        } catch (throwable: Throwable) {
+            emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
+        }
+    }
 
 }

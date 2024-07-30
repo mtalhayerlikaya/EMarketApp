@@ -14,4 +14,5 @@
     <string name="price_range">Select A Price Range</string>
     <string name="add_to_basket_button">Add to Basket</string>
     <string name="remove_from_basket_button">Remove from Basket</string>
+    <string name="complete">Complete</string>
 </resources>

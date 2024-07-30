@@ -1,15 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.basket.BasketFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Basket fragment"
-        android:gravity="center" />
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_color"
+        app:title="Basket"
+        app:titleTextColor="@color/white"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/basketRv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        app:spanCount="2"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/totalTv"
+        tools:listitem="@layout/item_basket"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <TextView
+        android:id="@+id/totalTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total:"
+        android:textColor="#03A9F4"
+        android:fontFamily="sans-serif"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/totalPriceTv"
+        android:layout_marginStart="10dp"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/totalPriceTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.0₺"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="15dp" />
+
+    <Button
+        android:id="@+id/btn_add_to_card"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="10dp"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:text="@string/complete"
+        android:fontFamily="sans-serif"
+        app:cornerRadius="5dp"
+        android:backgroundTint="#2A59FE"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

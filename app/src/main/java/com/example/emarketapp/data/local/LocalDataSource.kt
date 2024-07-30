@@ -9,4 +9,6 @@ interface LocalDataSource {
     suspend fun getProductsBetweenRange(minPrice: Double, maxPrice: Double): List<ProductEntity>
     fun updateProduct(product: ProductEntity)
     fun getProduct(id: String): ProductEntity
+    suspend fun getFavProductList(): List<ProductEntity>
+    suspend fun getBasketProductList(): List<ProductEntity>
 }

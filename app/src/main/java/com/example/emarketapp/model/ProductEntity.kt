@@ -13,6 +13,6 @@ data class ProductEntity(
     val description: String,
     val model: String,
     val brand: String,
-    val isInBasket: Boolean = false,
+    val basketItemCount: Int = 0,
     val isFavorite: Boolean = false,
 )

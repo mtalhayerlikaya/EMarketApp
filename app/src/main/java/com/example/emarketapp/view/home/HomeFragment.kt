@@ -1,6 +1,5 @@
 package com.example.emarketapp.view.home
 
-import ProductAdapter
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emarketapp.R
+import com.example.emarketapp.adapter.ProductAdapter
 import com.example.emarketapp.base.BaseFragment
 import com.example.emarketapp.databinding.FragmentHomeBinding
 import com.example.emarketapp.model.ProductListUIModel

@@ -21,11 +21,15 @@ interface ProductDAO {
     @Query("SELECT * FROM product WHERE price BETWEEN :minPrice AND :maxPrice")
     suspend fun findProductBetweenRange(minPrice: Double, maxPrice: Double): List<ProductEntity>
 
-    /*    @Query("UPDATE product SET isInBasket = :inBasket WHERE id = :productID")
-        fun setInBasket(productID: String, inBasket: Boolean)*/
-
     @Query("SELECT * FROM product WHERE id = :productID")
     fun getProduct(productID: String): ProductEntity
+
+    @Query("SELECT * FROM product WHERE isFavorite is 1")
+    suspend fun getFavProductList(): List<ProductEntity>
+
+    @Query("SELECT * FROM product WHERE basketItemCount is not 0")
+    suspend fun getBasketProductList(): List<ProductEntity>
+
 
     @Update
     fun updateProduct(product: ProductEntity)

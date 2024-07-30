@@ -8,6 +8,6 @@ data class ProductListUIModel(
     val model: String,
     val brand: String,
     val id: String,
-    var isInBasket: Boolean = false,
+    var basketItemCount: Int = 0,
     var isFavorite: Boolean = false,
 )

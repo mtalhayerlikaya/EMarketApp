@@ -14,7 +14,7 @@ fun List<ProductEntity>.toProductUIList() = map {
         brand = it.brand,
         id = it.id,
         isFavorite = it.isFavorite,
-        isInBasket = it.isInBasket
+        basketItemCount = it.basketItemCount
     )
 }
 
@@ -28,7 +28,7 @@ fun List<ProductResponse>.toProductUIListFromResponse() = map {
         brand = it.brand,
         id = it.id,
         isFavorite = false,
-        isInBasket = false
+        basketItemCount = 0
     )
 }
 
@@ -42,7 +42,7 @@ fun List<ProductResponse>.toProductEntityList() = map {
         brand = it.brand,
         id = it.id,
         isFavorite = false,
-        isInBasket = false
+        basketItemCount = 0
     )
 }
 
@@ -51,13 +51,13 @@ fun ProductListUIModel.toProductEntity() =
     ProductEntity(
         name = this.name,
         image = this.image,
-        price = this.price.toDouble(), // Convert Double to String
+        price = this.price.toDouble(),
         description = this.description,
         model = this.model,
         brand = this.brand,
         id = this.id,
         isFavorite = this.isFavorite,
-        isInBasket = this.isInBasket
+        basketItemCount = this.basketItemCount
     )
 
 

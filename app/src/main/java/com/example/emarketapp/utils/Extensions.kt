@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 fun Activity.updateStatusBarColor(color: Int) {
@@ -18,7 +18,7 @@ fun Activity.updateStatusBarColor(color: Int) {
     window.statusBarColor = ContextCompat.getColor(this, color)
 }
 
-fun <T> SharedFlow<T>.pksCollectResult(
+fun <T> StateFlow<T>.pksCollectResult(
     lifecycleScope: LifecycleOwner,
     contextForShowSpinner: Context? = null,
     resultError: ((message: String) -> Any)? = null,
