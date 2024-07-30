@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emarketapp.R
@@ -136,8 +137,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
 
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = ProductAdapter(mActivity, homeViewModel, list) { product ->
-
+        adapter = ProductAdapter(mActivity, homeViewModel, list) { productID ->
+            val action = HomeFragmentDirections.homeFragmentToDetailFragment(productID)
+            findNavController().navigate(action)
         }
         binding.rv.adapter = adapter
         binding.rv.layoutManager = GridLayoutManager(mActivity, 2, LinearLayoutManager.VERTICAL, false)

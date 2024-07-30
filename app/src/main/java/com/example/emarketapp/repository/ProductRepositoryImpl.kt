@@ -5,8 +5,8 @@ import com.example.emarketapp.data.mapper.toProductEntity
 import com.example.emarketapp.data.mapper.toProductEntityList
 import com.example.emarketapp.data.mapper.toProductUIList
 import com.example.emarketapp.data.mapper.toProductUIListFromResponse
+import com.example.emarketapp.data.mapper.toProductUIModel
 import com.example.emarketapp.data.remote.RemoteDataSource
-import com.example.emarketapp.model.ProductEntity
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -43,7 +43,15 @@ constructor(
         }
     }
 
-    override fun getProduct(id: String): ProductEntity = localDataSource.getProduct(id)
+    override fun getProduct(id: String): Flow<Resource<ProductListUIModel>> = flow {
+        emit(Resource.Loading)
+        try {
+            val result = localDataSource.getProduct(id)
+            emit(Resource.Success(result.toProductUIModel()))
+        } catch (throwable: Throwable) {
+            emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
+        }
+    }
 
     override fun getSearchedProductFromDB(searchPattern: String): Flow<Resource<List<ProductListUIModel>>> =
         flow {

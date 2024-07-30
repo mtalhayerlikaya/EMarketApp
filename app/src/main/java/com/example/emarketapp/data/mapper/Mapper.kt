@@ -61,3 +61,15 @@ fun ProductListUIModel.toProductEntity() =
     )
 
 
+fun ProductEntity.toProductUIModel() =
+    ProductListUIModel(
+        name = this.name,
+        image = this.image,
+        price = this.price.toString(),
+        description = this.description,
+        model = this.model,
+        brand = this.brand,
+        id = this.id,
+        isFavorite = this.isFavorite,
+        basketItemCount = this.basketItemCount
+    )

@@ -6,7 +6,9 @@ import androidx.navigation.ui.NavigationUI
 import com.example.emarketapp.R
 import com.example.emarketapp.base.BaseActivity
 import com.example.emarketapp.databinding.ActivityMainBinding
+import com.example.emarketapp.utils.gone
 import com.example.emarketapp.utils.updateStatusBarColor
+import com.example.emarketapp.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,6 +20,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navHostFragment.navController)
+
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.detailFragment) {
+                binding.bottomNavigationView.gone()
+            } else {
+                binding.bottomNavigationView.visible()
+            }
+        }
     }
 
     fun setBadge() {

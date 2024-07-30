@@ -29,8 +29,6 @@ interface ProductDAO {
 
     @Query("SELECT * FROM product WHERE basketItemCount is not 0")
     suspend fun getBasketProductList(): List<ProductEntity>
-
-
     @Update
     fun updateProduct(product: ProductEntity)
 }

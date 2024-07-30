@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="5dp"
     android:layout_marginVertical="10dp"
+    android:id="@+id/product_root_ly"
     app:cardCornerRadius="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

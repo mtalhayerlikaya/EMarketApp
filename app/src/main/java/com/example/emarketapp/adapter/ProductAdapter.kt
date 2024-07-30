@@ -15,7 +15,7 @@ class ProductAdapter(
     private val context: Context,
     private val viewModel: HomeViewModel,
     private var items: MutableList<ProductListUIModel>,
-    private val addOrRemoveClick: (product: ProductListUIModel) -> Unit,
+    private val productClick: (productID: String) -> Unit,
 ) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,7 +41,9 @@ class ProductAdapter(
             binding.apply {
                 txtName.text = item.name
                 txtPrice.text = item.price
-
+                productRootLy.setOnClickListener {
+                    productClick(item.id)
+                }
                 Glide.with(itemView.context)
                     .load(item.image)
                     .into(productImageView)
@@ -49,13 +51,11 @@ class ProductAdapter(
                 updateButtonState(item)
                 updateFavoriteState(item, binding)
                 btnAddToCard.setOnClickListener {
-                    addOrRemoveClick(item)
                     item.basketItemCount = if (item.basketItemCount != 0) 0 else 1
                     updateButtonState(item)
                     viewModel.updateProduct(item)
                 }
                 addFavorite.setOnClickListener {
-                    addOrRemoveClick(item)
                     item.isFavorite = !item.isFavorite
                     updateFavoriteState(item, binding)
                     viewModel.updateProduct(item)
