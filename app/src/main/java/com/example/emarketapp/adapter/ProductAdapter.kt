@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.emarketapp.R
@@ -68,9 +69,19 @@ class ProductAdapter(
         }
         private fun updateFavoriteState(item: ProductListUIModel, binding: ItemProductBinding) {
             if (item.isFavorite)
-                binding.addFavorite.setImageDrawable(context.getDrawable(R.drawable.icon_star_liked))
+                binding.addFavorite.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        context,
+                        R.drawable.icon_star_liked
+                    )
+                )
             else
-                binding.addFavorite.setImageDrawable(context.getDrawable(R.drawable.icon_star_white))
+                binding.addFavorite.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        context,
+                        R.drawable.icon_star_white
+                    )
+                )
         }
     }
 }
