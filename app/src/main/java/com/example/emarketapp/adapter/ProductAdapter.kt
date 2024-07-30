@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.emarketapp.R
+import com.example.emarketapp.data.mapper.toProductUIModel
 import com.example.emarketapp.databinding.ItemProductBinding
+import com.example.emarketapp.model.ProductEntity
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.view.home.HomeViewModel
 
@@ -16,7 +20,20 @@ class ProductAdapter(
     private val viewModel: HomeViewModel,
     private var items: MutableList<ProductListUIModel>,
     private val productClick: (productID: String) -> Unit,
-) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+) : PagingDataAdapter<ProductEntity, ProductAdapter.ViewHolder>(DIFF_CALLBACK) {
+
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ProductEntity>() {
+            override fun areItemsTheSame(oldItem: ProductEntity, newItem: ProductEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: ProductEntity, newItem: ProductEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,10 +41,13 @@ class ProductAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        val product = getItem(position)
+        if (product != null) {
+            holder.bind(product.toProductUIModel())
+        }
     }
 
-    override fun getItemCount() = items.size
+    // override fun getItemCount() = items.size
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateProductList(updateList: List<ProductListUIModel>) {

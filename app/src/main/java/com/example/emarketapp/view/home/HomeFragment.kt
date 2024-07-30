@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emarketapp.R
@@ -17,11 +18,16 @@ import com.example.emarketapp.adapter.ProductAdapter
 import com.example.emarketapp.base.BaseFragment
 import com.example.emarketapp.databinding.FragmentHomeBinding
 import com.example.emarketapp.model.ProductListUIModel
-import com.example.emarketapp.utils.Resource
 import com.example.emarketapp.utils.Spinner
 import com.example.emarketapp.view.MainActivity
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
@@ -29,6 +35,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
     private lateinit var mActivity: MainActivity
     private lateinit var adapter: ProductAdapter
+
+    private var searchJob: Job? = null
+    private var filterJob: Job? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,10 +56,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrEmpty()) {
-                    homeViewModel.getProductList()
-                } else {
-                    homeViewModel.searchProduct(newText)
+                searchJob?.cancel()
+                searchJob = lifecycleScope.launch(Dispatchers.IO) {
+                    delay(300) // Add a delay for debouncing
+                    newText?.let { query ->
+                        homeViewModel.searchProduct(query).collect { result ->
+                            withContext(Dispatchers.Main) {
+                                adapter.submitData(result)
+                            }
+                        }
+                    }
                 }
                 return true
             }
@@ -58,83 +74,54 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.selectFilter.setOnClickListener {
             showFilterDialog()
         }
-
     }
 
     private fun observeFlow() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            homeViewModel.allProducts.collect() { result ->
-                when (result) {
-                    is Resource.Failure -> {
-                        Spinner.hide()
-                        Toast.makeText(requireContext(), result.exceptionMessage, Toast.LENGTH_SHORT).show()
-                    }
+        adapter = ProductAdapter(mActivity, homeViewModel, mutableListOf()) { productID ->
+            val action = HomeFragmentDirections.homeFragmentToDetailFragment(productID)
+            findNavController().navigate(action)
+        }
+        binding.rv.adapter = adapter
+        binding.rv.layoutManager = GridLayoutManager(mActivity, 2, LinearLayoutManager.VERTICAL, false)
 
-                    is Resource.Loading -> {
+        viewLifecycleOwner.lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadState ->
+                when {
+                    loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading -> {
                         Spinner.show(requireContext())
                     }
 
-                    is Resource.Success -> {
+                    loadState.refresh is LoadState.NotLoading || loadState.append is LoadState.NotLoading -> {
                         Spinner.hide()
-                        handleAdapter(result.result.toMutableList())
+                    }
+
+                    loadState.refresh is LoadState.Error -> {
+                        Spinner.hide()
+                        Toast.makeText(
+                            requireContext(),
+                            (loadState.refresh as LoadState.Error).error.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    loadState.append is LoadState.Error -> {
+                        Spinner.hide()
+                        Toast.makeText(
+                            requireContext(),
+                            (loadState.append as LoadState.Error).error.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            homeViewModel.searchProductFlow.collect() { result ->
-                when (result) {
-                    is Resource.Failure -> {
-                        Spinner.hide()
-                        Toast.makeText(requireContext(), result.exceptionMessage, Toast.LENGTH_SHORT).show()
-                    }
-
-                    is Resource.Loading -> {
-                        Spinner.show(requireContext())
-                    }
-
-                    is Resource.Success -> {
-                        Spinner.hide()
-                        val productList = result.result
-                        adapter.updateProductList(productList)
-                    }
-                }
+            homeViewModel.products.collect { result ->
+                adapter.submitData(result)
             }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            homeViewModel.filterPriceRange.collect() { result ->
-                when (result) {
-                    is Resource.Failure -> {
-                        Spinner.hide()
-                        Toast.makeText(requireContext(), result.exceptionMessage, Toast.LENGTH_SHORT).show()
-                    }
-
-                    is Resource.Loading -> {
-                        Spinner.show(requireContext())
-                    }
-
-                    is Resource.Success -> {
-                        Spinner.hide()
-                        val productListBetweenRange = result.result
-                        adapter.updateProductList(productListBetweenRange)
-                    }
-                }
-            }
-        }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!binding.homeSearchView.query.isNullOrEmpty()) {
-            homeViewModel.searchProduct(binding.homeSearchView.query.toString())
-        } else {
-            homeViewModel.getProductList()
         }
     }
-
 
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
         adapter = ProductAdapter(mActivity, homeViewModel, list) { productID ->
@@ -187,7 +174,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     .show()
                 return@setOnClickListener
             }
-            homeViewModel.getProductsBetweenRange(minPrice.toDouble(), maxPrice.toDouble())
+            filterJob?.cancel()
+            filterJob = lifecycleScope.launch(Dispatchers.IO) {
+                delay(300) // Add a delay for debouncing
+                homeViewModel.getProductsBetweenRange(minPrice.toDouble(), maxPrice.toDouble()).collect { result ->
+                    withContext(Dispatchers.Main) {
+                        adapter.submitData(result)
+                    }
+                }
+            }
             dialog.dismiss()
         }
 

@@ -1,5 +1,8 @@
 package com.example.emarketapp.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.emarketapp.data.local.LocalDataSource
 import com.example.emarketapp.data.mapper.toProductEntity
 import com.example.emarketapp.data.mapper.toProductEntityList
@@ -7,6 +10,7 @@ import com.example.emarketapp.data.mapper.toProductUIList
 import com.example.emarketapp.data.mapper.toProductUIListFromResponse
 import com.example.emarketapp.data.mapper.toProductUIModel
 import com.example.emarketapp.data.remote.RemoteDataSource
+import com.example.emarketapp.model.ProductEntity
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -53,30 +57,23 @@ constructor(
         }
     }
 
-    override fun getSearchedProductFromDB(searchPattern: String): Flow<Resource<List<ProductListUIModel>>> =
-        flow {
-            emit(Resource.Loading)
-            try {
-                val result = localDataSource.getSearchedProductFromDB(searchPattern)
-                emit(Resource.Success(result.toProductUIList()))
-            } catch (throwable: Throwable) {
-                emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
-            }
+    override fun getSearchedProductFromDB(searchPattern: String): Flow<PagingData<ProductEntity>> {
+        return Pager(
+            config = PagingConfig(pageSize = 4, enablePlaceholders = false),
+            pagingSourceFactory = { localDataSource.getSearchedProductFromDB(searchPattern) }
+        ).flow
         }
-
 
     override fun getProductsBetweenRange(
         minPrice: Double,
         maxPrice: Double,
-    ): Flow<Resource<List<ProductListUIModel>>> = flow {
-        emit(Resource.Loading)
-        try {
-            val result = localDataSource.getProductsBetweenRange(minPrice, maxPrice)
-            emit(Resource.Success(result.toProductUIList()))
-        } catch (throwable: Throwable) {
-            emit(Resource.Failure(throwable.message ?: throwable.localizedMessage))
-        }
+    ): Flow<PagingData<ProductEntity>> {
+        return Pager(
+            config = PagingConfig(pageSize = 4, enablePlaceholders = false),
+            pagingSourceFactory = { localDataSource.getProductsBetweenRange(minPrice, maxPrice) }
+        ).flow
     }
+
 
     override fun updateProduct(product: ProductListUIModel) = localDataSource.updateProduct(product.toProductEntity())
 
@@ -100,4 +97,12 @@ constructor(
         }
     }
 
+    override fun getAllProducts(): Flow<PagingData<ProductEntity>> {
+        return Pager(
+            config = PagingConfig(pageSize = 4, enablePlaceholders = false),
+            pagingSourceFactory = { localDataSource.getAllProducts() }
+        ).flow
+
+
+    }
 }

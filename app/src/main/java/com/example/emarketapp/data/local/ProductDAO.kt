@@ -1,5 +1,6 @@
 package com.example.emarketapp.data.local
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -15,11 +16,14 @@ interface ProductDAO {
     @Query("SELECT * FROM product")
     suspend fun getProductList(): List<ProductEntity>
 
+    @Query("SELECT * FROM product ORDER BY name ASC")
+    fun getAllProducts(): PagingSource<Int, ProductEntity>
+
     @Query("SELECT * FROM product WHERE name LIKE '%' || :searchPattern || '%' OR name LIKE '%' || :searchPattern || '%'")
-    suspend fun findProductByName(searchPattern: String): List<ProductEntity>
+    fun findProductByName(searchPattern: String): PagingSource<Int, ProductEntity>
 
     @Query("SELECT * FROM product WHERE price BETWEEN :minPrice AND :maxPrice")
-    suspend fun findProductBetweenRange(minPrice: Double, maxPrice: Double): List<ProductEntity>
+    fun findProductBetweenRange(minPrice: Double, maxPrice: Double): PagingSource<Int, ProductEntity>
 
     @Query("SELECT * FROM product WHERE id = :productID")
     fun getProduct(productID: String): ProductEntity

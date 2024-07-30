@@ -1,5 +1,6 @@
 package com.example.emarketapp.data.local
 
+import androidx.paging.PagingSource
 import com.example.emarketapp.model.ProductEntity
 import javax.inject.Inject
 
@@ -9,16 +10,16 @@ constructor(private val productDAO: ProductDAO) : LocalDataSource {
     override suspend fun insertProductList(productList: List<ProductEntity>) =
         productDAO.insertAllProductsToDB(productList)
 
-    override suspend fun getSearchedProductFromDB(searchPattern: String): List<ProductEntity> =
+    override fun getSearchedProductFromDB(searchPattern: String): PagingSource<Int, ProductEntity> =
         productDAO.findProductByName(searchPattern)
 
     override suspend fun getProductListFromDB(): List<ProductEntity> =
         productDAO.getProductList()
 
-    override suspend fun getProductsBetweenRange(
+    override fun getProductsBetweenRange(
         minPrice: Double,
         maxPrice: Double,
-    ): List<ProductEntity> =
+    ): PagingSource<Int, ProductEntity> =
         productDAO.findProductBetweenRange(minPrice, maxPrice)
 
     override fun updateProduct(product: ProductEntity) = productDAO.updateProduct(product)
@@ -27,4 +28,5 @@ constructor(private val productDAO: ProductDAO) : LocalDataSource {
 
     override suspend fun getFavProductList(): List<ProductEntity> = productDAO.getFavProductList()
     override suspend fun getBasketProductList(): List<ProductEntity> = productDAO.getBasketProductList()
+    override fun getAllProducts(): PagingSource<Int, ProductEntity> = productDAO.getAllProducts()
 }
