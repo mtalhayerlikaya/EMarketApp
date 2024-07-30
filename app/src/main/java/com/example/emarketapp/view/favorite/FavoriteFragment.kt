@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.emarketapp.adapter.FavoriteAdapter
@@ -63,8 +64,9 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     }
 
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = FavoriteAdapter(mActivity, favViewModel, list) { product ->
-
+        adapter = FavoriteAdapter(mActivity, favViewModel, list) { productID ->
+            val action = FavoriteFragmentDirections.favoriteFragmentToDetailFragment(productID)
+            findNavController().navigate(action)
         }
         binding.favRv.adapter = adapter
         binding.favRv.layoutManager = GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)

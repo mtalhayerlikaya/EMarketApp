@@ -15,7 +15,7 @@ class FavoriteAdapter(
     private val context: Context,
     private val viewModel: FavoriteViewModel,
     private var items: MutableList<ProductListUIModel>,
-    private val addOrRemoveClick: (product: ProductListUIModel) -> Unit,
+    private val favoriteClicked: (productID: String) -> Unit,
 ) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,10 +46,13 @@ class FavoriteAdapter(
                     .load(item.image)
                     .into(favProductImageView)
 
+                binding.favRootLy.setOnClickListener {
+                    favoriteClicked(item.id)
+                }
+
                 updateFavoriteState(item, binding)
 
                 favAddToFavorite.setOnClickListener {
-                    addOrRemoveClick(item)
                     removeFavoriteProduct(position)
                     item.isFavorite = !item.isFavorite
                     updateFavoriteState(item, binding)
