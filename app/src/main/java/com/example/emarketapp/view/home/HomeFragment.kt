@@ -19,6 +19,8 @@ import com.example.emarketapp.databinding.FragmentHomeBinding
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.utils.Resource
 import com.example.emarketapp.utils.Spinner
+import com.example.emarketapp.utils.gone
+import com.example.emarketapp.utils.visible
 import com.example.emarketapp.view.MainActivity
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,10 +35,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mActivity = activity as MainActivity
-        //mActivity.setBadge()
         observeFlow()
         initUI()
-        //  homeViewModel.getProductList()
     }
 
     private fun initUI() {
@@ -76,7 +76,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
                     is Resource.Success -> {
                         Spinner.hide()
-                        handleAdapter(result.result.toMutableList())
+                        val productList = result.result
+                        if (productList.isEmpty()) binding.emptyLayout.visible()
+                        else binding.emptyLayout.gone()
+                        handleAdapter(productList.toMutableList())
                     }
                 }
             }
@@ -118,6 +121,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     is Resource.Success -> {
                         Spinner.hide()
                         val productListBetweenRange = result.result
+                        if (productListBetweenRange.isEmpty()) binding.emptyLayout.visible()
+                        else binding.emptyLayout.gone()
                         adapter.updateProductList(productListBetweenRange)
                     }
                 }

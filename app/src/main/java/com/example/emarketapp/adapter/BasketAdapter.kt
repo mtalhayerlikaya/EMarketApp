@@ -14,6 +14,7 @@ class BasketAdapter(
     private val context: Context,
     private val viewModel: BasketViewModel,
     private var items: MutableList<ProductListUIModel>,
+    private val basketEmpty: (isBasketEmpty: Boolean) -> Unit,
     private val setTotalPrice: (totalPrice: Double) -> Unit,
 ) : RecyclerView.Adapter<BasketAdapter.ViewHolder>() {
 
@@ -72,6 +73,7 @@ class BasketAdapter(
                     } else {
                         Toast.makeText(context, "Item can not be lower than zero", Toast.LENGTH_SHORT).show()
                     }
+                    if (items.isEmpty()) basketEmpty(true)
                 }
                 if (items.last() == item) setTotalPrice(totalPrice)
             }
