@@ -17,7 +17,6 @@ import com.example.emarketapp.R
 import com.example.emarketapp.adapter.ProductAdapter
 import com.example.emarketapp.base.BaseFragment
 import com.example.emarketapp.databinding.FragmentHomeBinding
-import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.utils.Spinner
 import com.example.emarketapp.view.MainActivity
 import com.google.android.material.slider.Slider
@@ -77,7 +76,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun observeFlow() {
-        adapter = ProductAdapter(mActivity, homeViewModel, mutableListOf()) { productID ->
+        adapter = ProductAdapter(mActivity, homeViewModel) { productID ->
             val action = HomeFragmentDirections.homeFragmentToDetailFragment(productID)
             findNavController().navigate(action)
         }
@@ -121,15 +120,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 adapter.submitData(result)
             }
         }
-    }
-
-    private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = ProductAdapter(mActivity, homeViewModel, list) { productID ->
-            val action = HomeFragmentDirections.homeFragmentToDetailFragment(productID)
-            findNavController().navigate(action)
-        }
-        binding.rv.adapter = adapter
-        binding.rv.layoutManager = GridLayoutManager(mActivity, 2, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun showFilterDialog() {

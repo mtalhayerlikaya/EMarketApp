@@ -23,6 +23,11 @@ devtools_ksp = "1.9.21-1.0.16"
 paging_version = "3.3.1"
 pagingCommonAndroid = "3.3.1"
 roomPagingVersion = "2.6.1"
+core = "1.44.0"
+mockitoCore = "4.10.0"
+mockitoKotlin = "4.0.0"
+junitKtx = "1.2.1"
+hiltTest = "2.44"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,7 +59,12 @@ lottie_anim = { group = "com.airbnb.android", name = "lottie", version.ref = "lo
 paging_library = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging_version" }
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomPagingVersion" }
-
+core = { group = "com.google.ar", name = "core", version.ref = "core" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoKotlin" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+hilt-test = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hiltTest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,9 +1,9 @@
 package com.example.emarketapp.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,6 @@ import com.example.emarketapp.view.home.HomeViewModel
 class ProductAdapter(
     private val context: Context,
     private val viewModel: HomeViewModel,
-    private var items: MutableList<ProductListUIModel>,
     private val productClick: (productID: String) -> Unit,
 ) : PagingDataAdapter<ProductEntity, ProductAdapter.ViewHolder>(DIFF_CALLBACK) {
 
@@ -45,15 +44,6 @@ class ProductAdapter(
         if (product != null) {
             holder.bind(product.toProductUIModel())
         }
-    }
-
-    // override fun getItemCount() = items.size
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateProductList(updateList: List<ProductListUIModel>) {
-        items.clear()
-        items.addAll(updateList)
-        notifyDataSetChanged()
     }
 
     inner class ViewHolder(private val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -88,9 +78,19 @@ class ProductAdapter(
         }
         private fun updateFavoriteState(item: ProductListUIModel, binding: ItemProductBinding) {
             if (item.isFavorite)
-                binding.addFavorite.setImageDrawable(context.getDrawable(R.drawable.icon_star_liked))
+                binding.addFavorite.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        context,
+                        R.drawable.icon_star_liked
+                    )
+                )
             else
-                binding.addFavorite.setImageDrawable(context.getDrawable(R.drawable.icon_star_white))
+                binding.addFavorite.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        context,
+                        R.drawable.icon_star_white
+                    )
+                )
         }
     }
 }
