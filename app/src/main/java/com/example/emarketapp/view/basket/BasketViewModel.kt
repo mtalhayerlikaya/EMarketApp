@@ -30,8 +30,8 @@ class BasketViewModel
         productRepository.updateProduct(product)
     }
 
-    fun getTotalPrice(product: ProductListUIModel) {
-        productRepository.updateProduct(product)
+    fun updateProductListAfterPurhasing(productList: List<ProductListUIModel>) {
+        productRepository.updateProductListAfterPurhasing(productList)
     }
 
 }

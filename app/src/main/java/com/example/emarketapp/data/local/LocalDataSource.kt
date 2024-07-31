@@ -11,4 +11,5 @@ interface LocalDataSource {
     fun getProduct(id: String): ProductEntity
     suspend fun getFavProductList(): List<ProductEntity>
     suspend fun getBasketProductList(): List<ProductEntity>
+    fun updateProductListAfterPurhasing(productList: List<ProductEntity>)
 }

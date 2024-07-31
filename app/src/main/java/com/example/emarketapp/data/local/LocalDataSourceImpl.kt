@@ -27,4 +27,6 @@ constructor(private val productDAO: ProductDAO) : LocalDataSource {
 
     override suspend fun getFavProductList(): List<ProductEntity> = productDAO.getFavProductList()
     override suspend fun getBasketProductList(): List<ProductEntity> = productDAO.getBasketProductList()
+    override fun updateProductListAfterPurhasing(productList: List<ProductEntity>) =
+        productDAO.updateProductList(productList)
 }

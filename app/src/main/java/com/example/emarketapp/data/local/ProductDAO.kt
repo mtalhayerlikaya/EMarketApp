@@ -31,4 +31,7 @@ interface ProductDAO {
     suspend fun getBasketProductList(): List<ProductEntity>
     @Update
     fun updateProduct(product: ProductEntity)
+
+    @Update
+    fun updateProductList(product: List<ProductEntity>)
 }

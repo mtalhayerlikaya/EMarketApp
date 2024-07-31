@@ -15,6 +15,8 @@
     <string name="add_to_basket_button">Add to Basket</string>
     <string name="remove_from_basket_button">Remove from Basket</string>
     <string name="complete">Complete</string>
+    <string name="ok_btn">OK</string>
+    <string name="order_received">Your order succesfully received</string>
     <string name="detail_description">Minima quas corrupti delectus. Pariatur itaque at.
         Voluptate expedita unde excepturi dolores quasi quis.
         Delectus occaecati quaerat iusto nihil reiciendis voluptatem excepturi illum.

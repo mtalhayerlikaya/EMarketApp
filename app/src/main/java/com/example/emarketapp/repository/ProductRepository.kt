@@ -12,4 +12,5 @@ interface ProductRepository {
     fun updateProduct(product: ProductListUIModel)
     fun getFavProductList(): Flow<Resource<List<ProductListUIModel>>>
     fun getBasketProductList(): Flow<Resource<List<ProductListUIModel>>>
+    fun updateProductListAfterPurhasing(productList: List<ProductListUIModel>)
 }
