@@ -79,6 +79,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                         val productList = result.result
                         if (productList.isEmpty()) binding.emptyLayout.visible()
                         else binding.emptyLayout.gone()
+                        val badgeCount = productList.filter { it.basketItemCount > 0 }
+                        mActivity.setBadge(badgeCount.size)
                         handleAdapter(productList.toMutableList())
                     }
                 }
@@ -142,7 +144,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
 
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = ProductAdapter(mActivity, homeViewModel, list) { productID ->
+        adapter = ProductAdapter(mActivity, homeViewModel, list, {
+            val productList = adapter.getAdapterList().filter { it.basketItemCount > 0 }
+            mActivity.setBadge(productList.size)
+        }) { productID ->
             val action = HomeFragmentDirections.homeFragmentToDetailFragment(productID)
             findNavController().navigate(action)
         }

@@ -16,6 +16,7 @@ class ProductAdapter(
     private val context: Context,
     private val viewModel: HomeViewModel,
     private var items: MutableList<ProductListUIModel>,
+    private val addBasketClick: () -> Unit,
     private val productClick: (productID: String) -> Unit,
 ) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
@@ -29,6 +30,10 @@ class ProductAdapter(
     }
 
     override fun getItemCount() = items.size
+
+    fun getAdapterList(): MutableList<ProductListUIModel> {
+        return items
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateProductList(updateList: List<ProductListUIModel>) {
@@ -55,6 +60,7 @@ class ProductAdapter(
                     item.basketItemCount = if (item.basketItemCount != 0) 0 else 1
                     updateButtonState(item)
                     viewModel.updateProduct(item)
+                    addBasketClick()
                 }
                 addFavorite.setOnClickListener {
                     item.isFavorite = !item.isFavorite

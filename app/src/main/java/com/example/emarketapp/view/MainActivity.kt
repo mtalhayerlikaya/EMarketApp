@@ -1,5 +1,6 @@
 package com.example.emarketapp.view
 
+
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -10,6 +11,7 @@ import com.example.emarketapp.utils.gone
 import com.example.emarketapp.utils.updateStatusBarColor
 import com.example.emarketapp.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -30,9 +32,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
-    fun setBadge() {
+    fun setBadge(badgeCount: Int) {
         val badge = binding.bottomNavigationView.getOrCreateBadge(R.id.basketFragment)
-        badge.isVisible = true
-        badge.number = 15
+        if (badgeCount != 0) {
+            badge.isVisible = true
+            badge.number = badgeCount
+        } else {
+            badge.isVisible = false
+        }
     }
 }
