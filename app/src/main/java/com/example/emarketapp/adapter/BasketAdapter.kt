@@ -1,6 +1,5 @@
 package com.example.emarketapp.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,11 +13,12 @@ class BasketAdapter(
     private val context: Context,
     private val viewModel: BasketViewModel,
     private var items: MutableList<ProductListUIModel>,
+    private val clickListener: () -> Unit,
     private val basketEmpty: (isBasketEmpty: Boolean) -> Unit,
     private val setTotalPrice: (totalPrice: Double) -> Unit,
 ) : RecyclerView.Adapter<BasketAdapter.ViewHolder>() {
 
-    public var totalPrice = 0.0
+    var totalPrice = 0.0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemBasketBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -35,13 +35,6 @@ class BasketAdapter(
         return items
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateProductList(updateList: List<ProductListUIModel>) {
-        items.clear()
-        items.addAll(updateList)
-        notifyDataSetChanged()
-    }
-
     inner class ViewHolder(private val binding: ItemBasketBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ProductListUIModel, position: Int) {
             binding.apply {
@@ -56,6 +49,7 @@ class BasketAdapter(
                     viewModel.updateProduct(item)
                     totalPrice += item.price.toDouble()
                     setTotalPrice(totalPrice)
+                    clickListener()
                 }
                 decreasePriceCardView.setOnClickListener {
                     if (item.basketItemCount > 0) {
@@ -74,6 +68,7 @@ class BasketAdapter(
                         Toast.makeText(context, "Item can not be lower than zero", Toast.LENGTH_SHORT).show()
                     }
                     if (items.isEmpty()) basketEmpty(true)
+                    clickListener()
                 }
                 if (items.last() == item) setTotalPrice(totalPrice)
             }

@@ -65,9 +65,16 @@ class BasketFragment : BaseFragment<FragmentBasketBinding>(FragmentBasketBinding
     }
 
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = BasketAdapter(mActivity, basketViewModel, list, { isEmpty ->
-            if (isEmpty) binding.emptyLayout.visibility = View.VISIBLE
-            else binding.emptyLayout.visibility = View.GONE
+        adapter = BasketAdapter(mActivity, basketViewModel, list, {
+            val productList = adapter.getAdapterList().filter { it.basketItemCount > 0 }
+            mActivity.setBadge(productList.size)
+        }, { isEmpty ->
+            if (isEmpty) {
+                binding.emptyLayout.visibility = View.VISIBLE
+                mActivity.setBadge(0)
+            } else {
+                binding.emptyLayout.visibility = View.GONE
+            }
         }) { totalPrice ->
             binding.totalPriceTv.text = "$totalPrice₺"
         }
