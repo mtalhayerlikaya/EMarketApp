@@ -33,7 +33,6 @@
         tools:listitem="@layout/item_basket"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
         android:layout_width="match_parent"
@@ -49,10 +48,11 @@
             android:text="Total:"
             android:textColor="#03A9F4"
             android:fontFamily="sans-serif"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="10dp"
-            android:textSize="15sp" />
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:id="@+id/totalPriceTv"
@@ -61,12 +61,11 @@
             android:text="0.0₺"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:layout_marginStart="3dp"
             android:textSize="16sp"
             android:fontFamily="sans-serif"
-            app:layout_constraintStart_toStartOf="@+id/totalTv"
-            app:layout_constraintTop_toBottomOf="@+id/totalTv"
-            android:layout_marginBottom="15dp" />
+            app:layout_constraintStart_toEndOf="@+id/totalTv"
+            app:layout_constraintBaseline_toBaselineOf="@+id/totalTv"
+            android:layout_marginStart="3dp" />
 
         <Button
             android:id="@+id/completeButton"
@@ -121,6 +120,5 @@
 
         </LinearLayout>
     </RelativeLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
