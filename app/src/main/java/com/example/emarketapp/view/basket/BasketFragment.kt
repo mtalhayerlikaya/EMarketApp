@@ -65,13 +65,20 @@ class BasketFragment : BaseFragment<FragmentBasketBinding>(FragmentBasketBinding
     }
 
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = BasketAdapter(mActivity, basketViewModel, list) { totalPrice ->
+        adapter = BasketAdapter(mActivity, basketViewModel, list, { isEmpty ->
+            if (isEmpty) binding.emptyLayout.visibility = View.VISIBLE
+            else binding.emptyLayout.visibility = View.GONE
+        }) { totalPrice ->
             binding.totalPriceTv.text = "$totalPrice₺"
         }
-        if (adapter.itemCount == 0)
+        if (adapter.itemCount == 0) {
             binding.totalPriceTv.text = "0.0₺"
-        else
+            binding.emptyLayout.visibility = View.VISIBLE
+        } else {
             binding.totalPriceTv.text = "$adapter.totalPrice₺"
+            binding.emptyLayout.visibility = View.GONE
+        }
+
 
         binding.basketRv.adapter = adapter
         binding.basketRv.layoutManager = LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false)

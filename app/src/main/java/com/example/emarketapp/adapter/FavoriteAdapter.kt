@@ -15,6 +15,7 @@ class FavoriteAdapter(
     private val context: Context,
     private val viewModel: FavoriteViewModel,
     private var items: MutableList<ProductListUIModel>,
+    private val basketEmpty: (isBasketEmpty: Boolean) -> Unit,
     private val favoriteClicked: (productID: String) -> Unit,
 ) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
@@ -57,6 +58,7 @@ class FavoriteAdapter(
                     item.isFavorite = !item.isFavorite
                     updateFavoriteState(item, binding)
                     viewModel.updateProduct(item)
+                    if (items.isEmpty()) basketEmpty(true)
                 }
             }
         }

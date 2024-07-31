@@ -16,6 +16,8 @@ import com.example.emarketapp.databinding.FragmentFavoriteBinding
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.utils.Resource
 import com.example.emarketapp.utils.Spinner
+import com.example.emarketapp.utils.gone
+import com.example.emarketapp.utils.visible
 import com.example.emarketapp.view.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -49,6 +51,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
                         is Resource.Success -> {
                             Spinner.hide()
                             val favList = result.result
+                            if (favList.isEmpty()) binding.emptyLayout.visible()
+                            else binding.emptyLayout.gone()
                             handleAdapter(favList.toMutableList())
                         }
                     }
@@ -64,7 +68,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     }
 
     private fun handleAdapter(list: MutableList<ProductListUIModel>) {
-        adapter = FavoriteAdapter(mActivity, favViewModel, list) { productID ->
+        adapter = FavoriteAdapter(mActivity, favViewModel, list, { isEmpty ->
+            if (isEmpty) binding.emptyLayout.visibility = View.VISIBLE
+            else binding.emptyLayout.visibility = View.GONE
+        }) { productID ->
             val action = FavoriteFragmentDirections.favoriteFragmentToDetailFragment(productID)
             findNavController().navigate(action)
         }
