@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.example.emarketapp.data.local.LocalDataSource
 import com.example.emarketapp.data.mapper.toProductEntity
 import com.example.emarketapp.data.mapper.toProductEntityList
+import com.example.emarketapp.data.mapper.toProductEntityListFromUIModel
 import com.example.emarketapp.data.mapper.toProductUIList
 import com.example.emarketapp.data.mapper.toProductUIListFromResponse
 import com.example.emarketapp.data.mapper.toProductUIModel
@@ -105,4 +106,7 @@ constructor(
 
 
     }
+
+    override fun updateProductListAfterPurhasing(productList: List<ProductListUIModel>) =
+        localDataSource.updateProductListAfterPurhasing(productList.toProductEntityListFromUIModel())
 }

@@ -8,8 +8,10 @@
     <string name="filters">Filters:</string>
     <string name="select_filter">Select Filter</string>
     <string name="min_price">Min Price</string>
+    <string name="order_received">Your order succesfully received</string>
     <string name="max_price">Max Price</string>
     <string name="filter_button">FILTER</string>
+    <string name="ok_btn">OK</string>
     <string name="clear_button">FILTER</string>
     <string name="price_range">Select A Price Range</string>
     <string name="add_to_basket_button">Add to Basket</string>

@@ -15,4 +15,5 @@ interface ProductRepository {
     fun getFavProductList(): Flow<Resource<List<ProductListUIModel>>>
     fun getBasketProductList(): Flow<Resource<List<ProductListUIModel>>>
     fun getAllProducts(): Flow<PagingData<ProductEntity>>
+    fun updateProductListAfterPurhasing(productList: List<ProductListUIModel>)
 }

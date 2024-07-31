@@ -73,3 +73,17 @@ fun ProductEntity.toProductUIModel() =
         isFavorite = this.isFavorite,
         basketItemCount = this.basketItemCount
     )
+
+fun List<ProductListUIModel>.toProductEntityListFromUIModel() = map {
+    ProductEntity(
+        name = it.name,
+        image = it.image,
+        price = it.price.toDouble(),
+        description = it.description,
+        model = it.model,
+        brand = it.brand,
+        id = it.id,
+        isFavorite = it.isFavorite,
+        basketItemCount = it.basketItemCount
+    )
+}

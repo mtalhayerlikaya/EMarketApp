@@ -13,4 +13,5 @@ interface LocalDataSource {
     suspend fun getFavProductList(): List<ProductEntity>
     suspend fun getBasketProductList(): List<ProductEntity>
     fun getAllProducts(): PagingSource<Int, ProductEntity>
+    fun updateProductListAfterPurhasing(productList: List<ProductEntity>)
 }

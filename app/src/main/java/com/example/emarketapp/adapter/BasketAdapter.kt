@@ -30,6 +30,10 @@ class BasketAdapter(
 
     override fun getItemCount() = items.size
 
+    fun getAdapterList(): MutableList<ProductListUIModel> {
+        return items
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun updateProductList(updateList: List<ProductListUIModel>) {
         items.clear()

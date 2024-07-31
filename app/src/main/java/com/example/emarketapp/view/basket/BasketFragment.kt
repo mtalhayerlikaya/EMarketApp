@@ -1,13 +1,16 @@
 package com.example.emarketapp.view.basket
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.emarketapp.R
 import com.example.emarketapp.adapter.BasketAdapter
 import com.example.emarketapp.base.BaseFragment
 import com.example.emarketapp.databinding.FragmentBasketBinding
@@ -23,11 +26,6 @@ class BasketFragment : BaseFragment<FragmentBasketBinding>(FragmentBasketBinding
     private val basketViewModel: BasketViewModel by viewModels()
     private lateinit var adapter: BasketAdapter
     private lateinit var mActivity: MainActivity
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -77,6 +75,35 @@ class BasketFragment : BaseFragment<FragmentBasketBinding>(FragmentBasketBinding
 
         binding.basketRv.adapter = adapter
         binding.basketRv.layoutManager = LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false)
+
+        binding.completeButton.setOnClickListener {
+            if (adapter.itemCount > 0) {
+                val updatedList = adapter.getAdapterList().onEach { it.basketItemCount = 0 }
+                basketViewModel.updateProductListAfterPurhasing(updatedList)
+                binding.totalPriceTv.text = "0.0₺"
+                adapter.getAdapterList().clear()
+                adapter.notifyDataSetChanged()
+                showDialogAfterOrder()
+            }
+        }
     }
 
+    private fun showDialogAfterOrder() {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        val dialogView: View = layoutInflater.inflate(R.layout.complete_order_dialog, null)
+        builder.setView(dialogView)
+
+        val okBtn = dialogView.findViewById<Button>(R.id.okBtn)
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+        okBtn.setOnClickListener {
+            mActivity.binding.bottomNavigationView.selectedItemId = R.id.homeFragment
+            dialog.dismiss()
+        }
+    }
+
+
 }
+
