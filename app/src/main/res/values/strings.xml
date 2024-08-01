@@ -17,6 +17,7 @@
     <string name="complete">Complete</string>
     <string name="ok_btn">OK</string>
     <string name="order_received">Your order succesfully received</string>
+    <string name="basket_error">You dont have any product in your basket</string>
     <string name="detail_description">Minima quas corrupti delectus. Pariatur itaque at.
         Voluptate expedita unde excepturi dolores quasi quis.
         Delectus occaecati quaerat iusto nihil reiciendis voluptatem excepturi illum.

@@ -102,6 +102,8 @@ class BasketFragment : BaseFragment<FragmentBasketBinding>(FragmentBasketBinding
                 adapter.getAdapterList().clear()
                 adapter.notifyDataSetChanged()
                 showDialogAfterOrder()
+            } else {
+                Toast.makeText(requireContext(), getString(R.string.basket_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
