@@ -25,7 +25,7 @@ fun View.gone() {
 }
 
 
-fun Fragment.pksHandleOnBackPressed(activity: AppCompatActivity, callback: (Boolean) -> Unit) {
+fun Fragment.handleOnBackPressedExt(activity: AppCompatActivity, callback: (Boolean) -> Unit) {
     activity.onBackPressedDispatcher.addCallback(viewLifecycleOwner,
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

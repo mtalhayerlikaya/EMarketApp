@@ -17,7 +17,7 @@ import com.example.emarketapp.databinding.FragmentDetailBinding
 import com.example.emarketapp.model.ProductListUIModel
 import com.example.emarketapp.utils.Resource
 import com.example.emarketapp.utils.Spinner
-import com.example.emarketapp.utils.pksHandleOnBackPressed
+import com.example.emarketapp.utils.handleOnBackPressedExt
 import com.example.emarketapp.view.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
-        this@DetailFragment.pksHandleOnBackPressed(mActivity) {
+        this@DetailFragment.handleOnBackPressedExt(mActivity) {
             findNavController().popBackStack()
         }
     }
